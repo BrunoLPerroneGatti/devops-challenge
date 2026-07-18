@@ -44,6 +44,7 @@ Health endpoint:
 - Uvicorn    
 - Pytest  
 - httpx
+- Github actions
 ---
 ## Running locally
 
@@ -64,3 +65,14 @@ uvicorn main:app --host 0.0.0.0 --port 8080
 ```
 
 The API will be available at `http://localhost:8080`.
+
+---
+## Continuous Integration
+
+The repository includes a GitHub Actions workflow that automatically runs the project's test suite whenever code is pushed or a pull request targeting the `main` branch is created or updated.
+
+Current pipeline:
+- Checks out the repository.
+- Sets up the Python environment.
+- Installs the project dependencies.
+- Executes the automated test using Pytest.
