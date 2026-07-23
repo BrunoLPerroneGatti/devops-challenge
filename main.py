@@ -1,4 +1,5 @@
 import os
+import socket
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -11,3 +12,9 @@ def hello():
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/info")
+def get_info():
+    hostname = socket.gethostname()
+    return {"hostname": hostname}

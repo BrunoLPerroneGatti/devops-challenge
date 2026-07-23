@@ -18,8 +18,9 @@ Available endpoints:
 |---|---|---|
 |GET|`/`|Returns a JSON message (`Hello world` by default).|
 |GET|`/health`|Returns the application's health status.|
+|GET|`/info`|Returns the hostname.|
 
-The application also supports configuring the greeting message through the `APP_MESSAGE` environment variable.
+The greeting message is configurable via the `APP_MESSAGE` environment variable.
 
 Example response:
 
@@ -45,6 +46,8 @@ Health endpoint:
 - Pytest  
 - httpx
 - Github actions
+- AWS EC2 
+- systemd
 ---
 ## Running locally
 
