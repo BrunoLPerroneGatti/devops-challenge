@@ -1,0 +1,54 @@
+---
+- name: Deploy DevOps challenge application
+  hosts: webservers
+  become: true        
+
+  vars:
+    app_user: ubuntu
+    app_dir: /home/ubuntu/devops-challenge
+    app_message: "hello world from EC2"
+    repo_url: https://github.com/BrunoLPerroneGatti/devops-challenge.git
+
+  tasks:
+    - name: Update and upgrade apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+
+    - name: Install system dependencies
+      ansible.builtin.apt:
+        name:
+          - python3
+          - python3-pip
+          - python3-venv
+          - git
+        state: present
+
+    - name: Clone or update git repository
+      ansible.builtin.git:
+        repo: "{{ repo_url }}"
+        dest: "{{ app_dir }}"
+        version: main
+      become_user: "{{ app_user }}"
+
+    - name: Create Python virtual environment and install dependencies
+      ansible.builtin.pip:
+        requirements: "{{ app_dir }}/requirements.txt"
+        virtualenv: "{{ app_dir }}/.venv"
+        virtualenv_command: python3 -m venv
+      become_user: "{{ app_user }}"
+
+    - name: Deploy systemd service file
+      ansible.builtin.template:
+        src: templates/devops-challenge.service.j2
+        dest: /etc/systemd/system/devops-challenge.service
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Enable and start the service
+      ansible.builtin.systemd:
+        name: devops-challenge
+        enabled: true
+        state: restarted
+        daemon_reload: true

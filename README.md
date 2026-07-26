@@ -48,6 +48,7 @@ Health endpoint:
 - Github actions
 - AWS EC2 
 - systemd
+- Ansible
 ---
 ## Running locally
 
@@ -79,3 +80,15 @@ Current pipeline:
 - Sets up the Python environment.
 - Installs the project dependencies.
 - Executes the automated test using Pytest.
+
+---
+## Deployment
+
+The application is deployed to an AWS EC2 instance using **Ansible**, automating the following tasks:
+
+1. Update the package index and upgrade installed packages.
+2. Install the required system dependencies.
+3. Clone or update the application repository.
+4. Create a Python virtual environment and install the application dependencies.
+5. Generate the systemd service.
+6. Reload systemd and restarts the application service.
