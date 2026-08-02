@@ -49,6 +49,10 @@ Health endpoint:
 - AWS EC2 
 - systemd
 - Ansible
+- Docker
+- GitHub Container Registry
+- Docker Compose
+- Nginx
 ---
 ## Running locally
 
@@ -84,11 +88,14 @@ Current pipeline:
 ---
 ## Deployment
 
-The application is deployed to an AWS EC2 instance using **Ansible**, automating the following tasks:
+The application is deployed to an AWS EC2 instance using **Ansible** and **Docker Compose**, automating the following tasks:
 
-1. Update the package index and upgrade installed packages.
-2. Install the required system dependencies.
-3. Clone or update the application repository.
-4. Create a Python virtual environment and install the application dependencies.
-5. Generate the systemd service.
-6. Reload systemd and restarts the application service.
+1. Updates the operating system packages.
+2. Install Docker Engine and Docker Compose.
+3. Enables and starts the Docker service.
+4. Deploys the Docker Compose and Nginx configuration files
+5. Start or update the application using Docker Compose.
+
+The deployed stack consists of:
+- **FastAPI** application container.
+- **Nginx** reverse proxy exposing the application on port 80.

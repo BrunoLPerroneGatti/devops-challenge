@@ -1,0 +1,8 @@
+__pycache__/
+.github/
+.pytest_cache/
+.venv/
+ansible/
+docs/
+tests/
+*.md
