@@ -17,3 +17,4 @@ def test_info_returns_expected_fields():
     response = client.get("/info")
     assert response.status_code == 200
     assert "hostname" in response.json()
+    assert "instance_id" in response.json()
