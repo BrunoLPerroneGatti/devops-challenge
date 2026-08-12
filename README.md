@@ -18,7 +18,7 @@ Available endpoints:
 |---|---|---|
 |GET|`/`|Returns a JSON message (`Hello world` by default).|
 |GET|`/health`|Returns the application's health status.|
-|GET|`/info`|Returns the hostname.|
+|GET|`/info`|Returns the hostname and EC2 instance ID, allows instances to be identified when running behind a load balancer.|
 
 The greeting message is configurable via the `APP_MESSAGE` environment variable.
 
@@ -53,6 +53,9 @@ Health endpoint:
 - GitHub Container Registry
 - Docker Compose
 - Nginx
+- Application load balancer (ALB)
+- Auto scaling groups (ASG)
+- Amazon Route 53
 ---
 ## Running locally
 
@@ -96,6 +99,12 @@ The application is deployed to an AWS EC2 instance using **Ansible** and **Docke
 4. Deploys the Docker Compose and Nginx configuration files
 5. Start or update the application using Docker Compose.
 
-The deployed stack consists of:
-- **FastAPI** application container.
-- **Nginx** reverse proxy exposing the application on port 80.
+Once the server is fully configured, an Amazon machine image (AMI) is created from it. This AMI is then used as the base image for additional EC2 instances, ensuring that each instance starts with the same application and Docker configuration.
+
+The resulting infrastructure consists of:
+- **Application load balancer (ALB)**: provides a single public entry point and distributes HTTP requests across the available EC2 instances.
+- **Auto Scaling Group (ASG)**: manages the number of EC2 instances running the application.
+- **EC2 instances**: run the Docker Compose stack.
+- **Docker Compose**: runs the FastAPI application and Nginx reverse proxy on each instance.
+- **Nginx**:  receives HTTP traffic from the load balancer and forwards it to the FastAPI application.
+- **FastAPI**: provides the REST API.
