@@ -6,7 +6,7 @@
   vars:
     app_user: ubuntu
     app_dir: /home/ubuntu/devops-challenge
-    app_message: "hello world from EC2 with docker"
+    app_message: "hello universe from EC2 with docker"
     image: ghcr.io/brunolperronegatti/devops-challenge:latest
 
   tasks:
