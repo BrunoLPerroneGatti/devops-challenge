@@ -51,4 +51,4 @@ jobs:
       - name: Deploy with Ansible
         env:
           ANSIBLE_HOST_KEY_CHECKING: False
-        run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
+        run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yaml
