@@ -78,18 +78,7 @@ uvicorn main:app --host 0.0.0.0 --port 8080
 The API will be available at `http://localhost:8080`.
 
 ---
-## Continuous Integration
-
-The repository includes a GitHub Actions workflow that automatically runs the project's test suite whenever code is pushed or a pull request targeting the `main` branch is created or updated.
-
-Current pipeline:
-- Checks out the repository.
-- Sets up the Python environment.
-- Installs the project dependencies.
-- Executes the automated test using Pytest.
-
----
-## Deployment
+## Manual deployment
 
 The application is deployed to an AWS EC2 instance using **Ansible** and **Docker Compose**, automating the following tasks:
 
@@ -108,3 +97,23 @@ The resulting infrastructure consists of:
 - **Docker Compose**: runs the FastAPI application and Nginx reverse proxy on each instance.
 - **Nginx**:  receives HTTP traffic from the load balancer and forwards it to the FastAPI application.
 - **FastAPI**: provides the REST API.
+
+---
+## Continuous integration and deployment
+
+The repository uses GitHub actions for both continuous integration and deployment.
+
+The CI workflow automatically runs the project's test suite whenever code is pushed in any branch except `main` or a pull request targeting the `main` branch is created or updated.
+
+Current pipeline:
+- Checks out the repository.
+- Sets up the Python environment.
+- Installs the project dependencies.
+- Executes the automated test using Pytest.
+
+The CD workflow is triggered when changes are pushed to the `main` branch and performs the following stages:
+
+- Runs the automated test suite.
+- Builds the Docker image.
+- Pushes the image to GitHub container registry.
+- Deploys the updated application to the EC2 instance using Ansible.
