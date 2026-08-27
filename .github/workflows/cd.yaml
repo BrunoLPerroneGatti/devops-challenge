@@ -6,6 +6,8 @@ on:
     paths-ignore:
       - "README.md"
       - "docs/**"
+      - "terraform/**"
+      - "observability/**"
   workflow_dispatch:
 
 jobs:
@@ -31,6 +33,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v7
         with:
+          context: ./app
           push: true
           tags: ghcr.io/brunolperronegatti/devops-challenge:latest
 

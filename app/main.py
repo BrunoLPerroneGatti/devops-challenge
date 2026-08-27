@@ -3,8 +3,13 @@ import socket
 import httpx
 
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
+
+Instrumentator(
+    excluded_handlers=["/metrics"]
+).instrument(app).expose(app)
 
 def get_instance_id() -> str:
     try:
@@ -39,3 +44,8 @@ def get_info():
     hostname = socket.gethostname()
     instance_id = get_instance_id()
     return {"hostname": hostname, "instance_id": instance_id}
+
+@app.get("/error")
+def error():
+    raise RuntimeError("Something went wrong")
+
