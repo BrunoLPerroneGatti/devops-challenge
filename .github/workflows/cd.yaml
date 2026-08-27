@@ -33,7 +33,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v7
         with:
-          context: ./app
+          context: "{{defaultContext}}:app"
           push: true
           tags: ghcr.io/brunolperronegatti/devops-challenge:latest
 
