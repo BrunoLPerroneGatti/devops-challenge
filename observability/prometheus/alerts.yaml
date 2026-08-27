@@ -1,0 +1,11 @@
+groups:
+  - name: http_requests
+    rules:
+      - alert: HighHTTPRequestRate
+        expr: sum(rate(http_requests_total[20s])) > 2
+        for: 5s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High HTTP request rate"
+          description: "The application is receiving more than 2 request per second."
