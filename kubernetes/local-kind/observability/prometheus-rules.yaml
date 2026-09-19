@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: devops-challenge-app
+  namespace: observability
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: devops-challenge-app
+      rules:
+
+        - alert: HighHTTPRequestRate
+          expr: sum(rate(http_requests_total[20s])) > 2
+          for: 5s
+          labels:
+            severity: warning
+          annotations:
+            summary: "High HTTP request rate"
+            description: "The application is receiving more than 2 request per second."

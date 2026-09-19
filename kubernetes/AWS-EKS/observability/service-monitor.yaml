@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: devops-challenge-app
+  namespace: observability
+  labels:
+    release: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - development
+
+  selector:
+    matchLabels:
+      app: devops-challenge-app
+
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s

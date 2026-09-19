@@ -31,7 +31,7 @@ def get_instance_id() -> str:
 
 @app.get("/")
 def hello():
-    message = os.getenv("APP_MESSAGE", "Hello world")
+    message = os.getenv("APP_MESSAGE", "Hello world 0.1")
     return {"message": message}
 
 @app.get("/health")

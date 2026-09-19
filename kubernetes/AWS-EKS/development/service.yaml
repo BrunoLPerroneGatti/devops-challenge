@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-challenge-app
+  namespace: development
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "external"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+  labels:
+    app: devops-challenge-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: devops-challenge-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http

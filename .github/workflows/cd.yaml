@@ -35,27 +35,41 @@ jobs:
         with:
           context: "{{defaultContext}}:app"
           push: true
-          tags: ghcr.io/brunolperronegatti/devops-challenge:latest
+          tags: |
+            ghcr.io/brunolperronegatti/devops-challenge:latest
+            ghcr.io/brunolperronegatti/devops-challenge:${{ github.sha }}
 
   deploy:
-    name: Deploy to EC2
+    name: Deploy to EKS
     runs-on: ubuntu-latest
     needs: build-and-push
+    
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up SSH private key
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::816344831324:role/GitHubActions-EKS-Deploy
+          aws-region: us-east-2
+        
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
+
+      - name: Configure kubectl
+        run: aws eks update-kubeconfig --region us-east-2 --name devops-challenge
+
+      - name: Deploy application
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/devops-challenge-key.pem
-          chmod 600 ~/.ssh/devops-challenge-key.pem
+          kubectl set image deployment/devops-challenge-app \
+            devops-challenge-app=ghcr.io/brunolperronegatti/devops-challenge:${{ github.sha }} \
+            -n development
 
-      - name: Install Ansible
-        run: pip install ansible
-
-      - name: Deploy with Ansible
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: False
-        run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yaml
+      - name: Wait for rollout
+        run: kubectl rollout status deployment/devops-challenge-app -n development
